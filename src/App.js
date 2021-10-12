@@ -13,11 +13,21 @@ function App() {
       <Spacer>
         <div className="h-12" />
 
+        <div className="flex">
         <div className="py-5 w-2/4">
           <div className="flex flex-wrap w-full gap-2">
             {savedLabelList.map(el => <span className="px-3 py-1/2 rounded-full" style={{backgroundColor: el.color}}>{el.name}</span>)}
           </div>
         </div>
+
+          <div className="w-2/4">
+            <h1>
+              <code>{savedLabelList.map(el => JSON.stringify(el))}</code>
+            </h1>
+          </div>
+        </div>
+
+        
 
         <span className="px-3 py-1/2 rounded-full" style={{ backgroundColor: labelColor }}>
           {labelText}
