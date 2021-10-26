@@ -4,10 +4,8 @@ import {
   Grid,
   TextField,
   Button,
-
 } from '@mui/material';
 
-import LabelForm from './components/label-form';
 import LabelCode from './components/label-code';
 
 function App() {
