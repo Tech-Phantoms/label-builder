@@ -7,7 +7,8 @@ import {
   Chip
 } from '@mui/material';
 import shortId from 'shortid';
-import { dropWhile, remove } from 'lodash';
+import { remove } from 'lodash';
+import {lightOrDark} from './utils';
 
 import LabelCode from './components/label-code';
 
@@ -23,8 +24,9 @@ function App() {
   const [labelList, updateLabelList] = useState([]);
 
   const addLabel = () => {
+    
     if (labelList.length === 0) {
-      updateLabelList([{ ...label, id: shortId.generate() }])
+      updateLabelList([{ ...label, id: shortId.generate(), alias: (label.alias? label.alias.split(','): '') }])
     } else {
       updateLabelList([...labelList, { ...label, id: shortId.generate() }])
     }
@@ -100,7 +102,10 @@ function App() {
                 {labelList.length === 0 ? null : [labelList][0].map(el => {
                   console.log(el)
                   return <Grid item xs="auto" key={el.id}>
-                    <Chip label={el.name} onDelete={() => {
+                    <Chip label={el.name} sx={{
+                      backgroundColor: el.color,
+                      color: (el.color)? (lightOrDark(el.color) === 'light'? 'black':'white'): null
+                    }} onDelete={() => {
                       const newLabelList = remove(labelList, (o) => {
                         return o.id !== el.id
                       })
