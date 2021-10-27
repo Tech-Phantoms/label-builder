@@ -12,7 +12,7 @@ function LabelCode(props) {
         setType(newType);
     }
 
-    const jsonString = JSON.stringify(props.code);
+    const jsonString = JSON.stringify(props.code, null, '\t');
     const yamlString = yaml.dump(props.code);
 
     return <div>
