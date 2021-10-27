@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Grid,
@@ -6,6 +6,8 @@ import {
   Button,
   Chip
 } from '@mui/material';
+import shortId from 'shortid';
+import { dropWhile, remove } from 'lodash';
 
 import LabelCode from './components/label-code';
 
@@ -21,7 +23,11 @@ function App() {
   const [labelList, updateLabelList] = useState([]);
 
   const addLabel = () => {
-    updateLabelList([...labelList, label])
+    if (labelList.length === 0) {
+      updateLabelList([{ ...label, id: shortId.generate() }])
+    } else {
+      updateLabelList([...labelList, { ...label, id: shortId.generate() }])
+    }
   }
 
   const LabelHandler = {
@@ -61,29 +67,28 @@ function App() {
             <Grid container item spacing={2}>
 
               <Grid item xs={12} md={6}>
-                <TextField label="name" fullWidth 
-                value={label.name} 
-                onChange={LabelHandler.name}
-                
+                <TextField label="name" fullWidth
+                  value={label.name}
+                  onChange={LabelHandler.name}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField label="description" fullWidth
-                value={label.description}
-                onChange={LabelHandler.description}
+                  value={label.description}
+                  onChange={LabelHandler.description}
                 />
               </Grid>
 
               <Grid item xs={12} md={6}>
                 <TextField label="alias" fullWidth
-                value={label.alias}
-                onChange={LabelHandler.alias}
+                  value={label.alias}
+                  onChange={LabelHandler.alias}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField label="color" fullWidth
-                value={label.color}
-                onChange={LabelHandler.color}
+                  value={label.color}
+                  onChange={LabelHandler.color}
                 />
               </Grid>
 
@@ -92,9 +97,18 @@ function App() {
               </Grid>
 
               <Grid container item xs={12} spacing={2}>
-                {labelList.length !== 0? [labelList].map(el => <Grid item xs="auto" key={el}>
-                  <Chip label={el.name} onDelete={() => {}} size="small" />
-                </Grid>): null}
+                {labelList.length === 0 ? null : [labelList][0].map(el => {
+                  console.log(el)
+                  return <Grid item xs="auto" key={el.id}>
+                    <Chip label={el.name} onDelete={() => {
+                      const newLabelList = remove(labelList, (o) => {
+                        return o.id !== el.id
+                      })
+                      console.log(newLabelList);
+                      updateLabelList(newLabelList);
+                    }} size="small" />
+                  </Grid>
+                })}
               </Grid>
 
             </Grid>
@@ -102,7 +116,12 @@ function App() {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <LabelCode code={JSON.stringify({name: 'todo'})} />
+            <LabelCode code={labelList.map(({ name, alias, description, color }) => ({
+              name,
+              alias,
+              description,
+              color
+            }))} />
           </Grid>
 
         </Grid>
